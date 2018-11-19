@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <script src="js/mui.min.js"></script>
+    <link href="css/mui.min.css" rel="stylesheet"/>
+	<link href="css/header.css" rel="stylesheet" />
+    <script type="text/javascript" charset="utf-8">
+      	mui.init();
+		mui.plusReady(function(){
+			plus.navigator.setStatusBarStyle("light");
+			plus.navigator.setStatusBarBackground("#C9394A");
+		})
+    </script>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav title">
+		<h1 class="mui-title title-color" ><b>小e</b></h1>
+	</header>
+	<nav class="mui-bar mui-bar-tab">
+		<a class="mui-tab-item mui-active" tabindex="0">
+			<span class="mui-icon mui-icon-chatbubble"></span>
+			<span class="mui-tab-label">小e</span>
+		</a>
+		<a class="mui-tab-item" tabindex="1">
+			<span class="mui-icon mui-icon-contact"></span>
+			<span class="mui-tab-label">通讯录</span>
+		</a>
+		<a class="mui-tab-item" tabindex="2">
+			<span class="mui-icon mui-icon-star"></span>
+			<span class="mui-tab-label">发现</span>
+		</a>
+		<a class="mui-tab-item" tabindex="3">
+			<span class="mui-icon mui-icon-contact"></span>
+			<span class="mui-tab-label">我的</span>
+		</a>
+	</nav>
+	
+	<script type="text/javascript">
+		
+		let xeArray=[
+			{
+				pageId:"chatlist.html",
+				pageUrl:"chatlist.html"
+			},
+			{
+				pageId:"contact.html",
+				pageUrl:"contact.html"
+			},
+			{
+				pageId:"discover.html",
+				pageUrl:"discover.html"
+			},
+			{
+				pageId:"me.html",
+				pageUrl:"me.html"
+			}
+		];
+		//定义窗体的样式	
+		let style={
+			top:"44px",
+			bottom:"50px"
+		}
+		
+		mui.plusReady(function(){
+			//延时加载
+			
+		var first = null;
+            mui.back = function(){
+                mui.plusReady(function() {
+                    //首页返回键处理
+                    //处理逻辑：1秒内，连续两次按返回键，则退出应用；
+                    if(!first){
+                        first = new Date().getTime();
+                        mui.toast('再按一次退出应用');
+                        setTimeout(function(){
+                            first = null;
+                        },1000);
+                    }else{
+                        if(new Date().getTime()-first<1000){
+                            plus.runtime.quit();
+                        }
+                    }
+                });
+            }
+		 //获取当前对象的webView对象
+		 let indexWebView=plus.webview.currentWebview();
+		 //向当前的webview添加子页面对象
+		 for(var i=0;i<xeArray.length;i++){
+			let subWebView=plus.webview.create( xeArray[i].pageUrl, xeArray[i].pageId,style);
+			//隐藏对象webview
+			subWebView.hide();
+			//追加子webview到当前的页面中
+			indexWebView.append(subWebView);
+		 }
+		 //默认显示
+		 plus.webview.show(xeArray[0].pageId);
+		 
+		 //批量绑定单击事件,展示不同的页面
+		 mui(".mui-bar-tab").on("tap","a",function(){
+			
+			let index=this.getAttribute("tabindex");
+			
+			//显示点击的webviwe页面
+			plus.webview.show(xeArray[index].pageId,"fade-in",200);
+			 
+			 //隐藏其他的页面
+			 for (var i = 0; i < xeArray.length; i++) {
+			 	if(i!=index){
+					plus.webview.hide(xeArray[i].pageId,"fade-out",200);
+				}
+			 }
+		 })
+		  setTimeout("initData()","800");
+		})
+		
+		//预加载我的列表和好友请求列表
+		function initData(){
+		 var meHtml=plus.webview.getWebviewById("me.html");
+		 //唤醒自定义事件
+		 mui.fire(meHtml,"refresh");
+		 var chatlist=plus.webview.getWebviewById("chatlist.html");
+		 mui.fire(chatlist,"refresh");
+		}
+	</script>
+	
+</body>
+</html>

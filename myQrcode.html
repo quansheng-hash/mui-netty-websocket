@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.css" rel="stylesheet" />
+		<link href="css/header.css" rel="stylesheet" />
+	</head>
+
+	<body style=" background-color: gray;">	
+		<header class="mui-bar mui-bar-nav title">
+			<a class="mui-icon mui-icon-back title-color"></a>
+			<h1 class="mui-title title-color">我的二维码</h1>
+		</header>
+		<div class="mui-content" style="padding: 120px 30px 0px 30px; background-color: gray;">
+			<div style="background-color: white; padding-left:20px;padding-top: 10px;">						
+				<img id="img_myface" src="" width="60px" style="border-radius: 8%;float: left;"/>
+				<label id="nickname" style="margin-left:10px;margin-top: 10px; float: left;color: darkgray;" ></label>
+			</div>
+			<div style="background-color: white;" >
+				<img id="qrImg" src="" />
+			</div>
+			<div style="background-color: white;text-align: center;font-size: 16px; color: dimgray;">
+				扫一扫上面二维码加我好友
+			</div>
+		</div>
+		
+		<script src="js/mui.js"></script>
+		<script src="js/app.js"></script>
+		<script type="text/javascript">
+			mui.init()
+			
+			mui.plusReady(function(){
+				var userInfo=app.getUserGlobalInfo();
+				var img_myface = document.getElementById("img_myface");
+				img_myface.src = app.imgServer +userInfo.imgUrl;
+				var lab_nickname = document.getElementById("nickname");
+				lab_nickname.innerHTML = userInfo.nickname;
+				var qrImg=document.getElementById("qrImg");
+				qrImg.src=app.imgServer+userInfo.qrcode;
+			})
+			
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.css" rel="stylesheet" />
+	</head>
+	<body>
+		<div class="mui-content">
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell mui-media">
+					<a href="javascript:;">
+						<img class="mui-media-object mui-pull-left" style="max-width: 30px;height: 30px;" src="image/friends.png">
+						<div class="mui-media-body">
+							<span style="margin-left: 5px; line-height: 30px;font-size: 16px;">朋友圈</span>
+						</div>
+					</a>
+				</li>		
+			</ul>
+			<br />
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell mui-media">
+					<a href="javascript:;">
+						<img class="mui-media-object mui-pull-left" style="max-width: 30px;height: 30px;" src="image/addfriends.png">
+						<div id="addFriends" class="mui-media-body">
+							<span style="margin-left: 5px; line-height: 30px;font-size: 16px;">添加好友</span>
+						</div>
+					</a>
+				</li>		
+			</ul>
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell mui-media">
+					<a href="javascript:;">
+						<img class="mui-media-object mui-pull-left" style="max-width: 30px;height: 30px;" src="image/scanscan.png">
+						<div id="scan" class="mui-media-body">
+							<span style="margin-left: 5px; line-height: 30px;font-size: 16px;">扫一扫</span>
+						</div>
+					</a>
+				</li>		
+			</ul>
+			
+		</div>
+		<script src="js/mui.js"></script>
+		<script type="text/javascript">
+			mui.init()
+			
+			mui.plusReady(function(){
+				var addFriends=document.getElementById("addFriends");
+				addFriends.addEventListener("tap",function(){
+					mui.openWindow("searchFriend.html","searchFriend.html");
+				})
+				var scan=document.getElementById("scan");
+				scan.addEventListener("tap",function(){
+					mui.openWindow('sacnme.html','sacnme.html',{})
+				})
+			})
+			
+		</script>
+	</body>
+
+</html>

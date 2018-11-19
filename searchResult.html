@@ -1,0 +1,112 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.css" rel="stylesheet" />
+		<link href="css/header.css" rel="stylesheet" />
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav title">
+			<h1 class="mui-title title-color" ><b>搜索结果</b></h1>
+		</header>
+		<div class="mui-content">
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell mui-media">
+						<img id="img" style="max-width: 60px;height: 60px;" class="mui-media-object mui-pull-left" src="">
+						<div class="mui-media-body">
+							<label id="nickname" style="font-size: 16px;"></label>
+							<p style="margin-top: 16px;" class="mui-ellipsis">请求添加您为好友</p>
+						</div>
+				</li>	
+			</ul>
+			<br />
+			<div>
+				<div style="text-align: center;">
+				<button id="addFriend" type="button" class="mui-btn mui-btn-block" 
+					style="width: 90%; display: inline;background-color:  #128e12;">添加好友</button>
+				<button id="back" type="button" class="mui-btn mui-btn-block" 
+					style="width: 90%; display: inline;background-color: grey;">返回</button>
+			</div>	
+			</div>
+			
+		</div>
+		<script src="js/mui.js"></script>
+		<script src="js/app.js"></script>
+		<script type="text/javascript">
+			mui.init()
+			
+			mui.plusReady(function () {
+			    var thiswebView=plus.webview.currentWebview();
+				
+			    var result=thiswebView.result;
+				//showUserInfo(result);
+				thiswebView.addEventListener("show",function(){
+					showUserInfo(result);
+				})
+				addFriend(result);
+				back();
+			})
+			
+			function showUserInfo(result){
+				 var img=document.getElementById("img");
+				 var nickname=document.getElementById("nickname");
+				 nickname.innerHTML=result.user.nickname;
+				 img.src=app.imgServer+result.user.imgUrl;
+				 
+			}
+			function addFriend(result){
+				var addFriend=document.getElementById("addFriend");
+				var user=app.getUserGlobalInfo();
+				addFriend.addEventListener("tap",function(){
+					if(app.isNotNull(result.msg)){
+						plus.nativeUI.toast(result.msg ,{
+							icon:"/image/error.png",
+							verticalAlign:"center"
+						})
+						return false;
+					}else{
+						plus.nativeUI.showWaiting("请稍后...");
+						mui.ajax(app.serverUrl+'/user/addFriendRequest',{
+							data:{
+								sendUserId:user.userId,
+								acceptUserId:result.user.userId
+							},
+							dataType:'json',//服务器返回json格式数据
+							type:'post',//HTTP请求类型
+							timeout:10000,//超时时间设置为10秒；
+							success:function(data){
+								plus.nativeUI.closeWaiting();
+								if(data.code==0){
+									plus.nativeUI.toast("好友请求发送成功" ,{
+										icon:"/image/success.png",
+										verticalAlign:"center"
+									})
+									mui.openWindow('index.html','index.html',{});
+								}else{
+									plus.nativeUI.toast(data.msg ,{
+										icon:"/image/error.png",
+										verticalAlign:"center"
+									})
+								}
+							},
+							error:function(xhr,type,errorThrown){
+								plus.nativeUI.closeWaiting();
+							}
+						});
+					}
+				})
+			}
+			function back(){
+				 var back=document.getElementById("back");
+				 back.addEventListener("tap",function(){
+					 mui.back();
+				 })
+			}
+		</script>
+	</body>
+
+</html>
